@@ -1,6 +1,6 @@
 # Authorized cloud response
 
-The offline demo remains a SQLite simulation. The separate `/api/cloud/operate` API implements real AWS IAM access-key status updates, Microsoft Graph service-principal `accountEnabled` updates and GCP service-account disable/enable calls. These connectors are implemented and tested against synthetic native API contracts. Live account verification is pending. Do not interpret contract tests as provider acceptance.
+The offline demo remains a SQLite simulation. The separate `/api/cloud/operate` API implements real AWS IAM access-key status updates, Microsoft Graph service-principal `accountEnabled` updates and GCP service-account disable/enable calls. These connectors are implemented and tested against synthetic native API contracts. AWS live acceptance verified a dedicated temporary key through disable/readback/restore/readback and cleanup; see [the receipt](aws-live-verification.json). Azure/GCP account verification remains pending. Contract tests do not establish provider acceptance.
 
 Use configured identities and a private target registry. `--demo` rejects `CLOUD_TARGET_FILE`. Nothing in an incoming event can select an account, credential profile, native target ID or URL. Registry aliases are tenant scoped, and duplicate physical targets across aliases or tenants are rejected.
 
