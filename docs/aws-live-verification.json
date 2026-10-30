@@ -36,7 +36,8 @@
   "observed_at": "2026-10-30T21:21:31.656166+00:00",
   "cleanup": {
     "dedicated_key_deleted": true,
-    "dedicated_user_deleted": true
+    "dedicated_user_deleted": true,
+    "independent_user_absence_readback": "NoSuchEntity"
   },
   "scope": "Dedicated temporary AWS IAM identity with no permission grants. Native key disable/readback/restore/readback and inventory collection only. No account-wide response or effective-permission claim."
 }
