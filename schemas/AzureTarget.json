@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "alias": {
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Alias",
+      "type": "string"
+    },
+    "tenant": {
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Tenant",
+      "type": "string"
+    },
+    "provider": {
+      "const": "azure",
+      "title": "Provider",
+      "type": "string"
+    },
+    "directory_tenant": {
+      "pattern": "^[a-f0-9-]{36}$",
+      "title": "Directory Tenant",
+      "type": "string"
+    },
+    "subscription": {
+      "pattern": "^[a-f0-9-]{36}$",
+      "title": "Subscription",
+      "type": "string"
+    },
+    "object_id": {
+      "pattern": "^[a-f0-9-]{36}$",
+      "title": "Object Id",
+      "type": "string"
+    },
+    "app_id": {
+      "pattern": "^[a-f0-9-]{36}$",
+      "title": "App Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "alias",
+    "tenant",
+    "provider",
+    "directory_tenant",
+    "subscription",
+    "object_id",
+    "app_id"
+  ],
+  "title": "AzureTarget",
+  "type": "object"
+}

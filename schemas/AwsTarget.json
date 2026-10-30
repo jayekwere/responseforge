@@ -1,0 +1,58 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "alias": {
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Alias",
+      "type": "string"
+    },
+    "tenant": {
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Tenant",
+      "type": "string"
+    },
+    "provider": {
+      "const": "aws",
+      "title": "Provider",
+      "type": "string"
+    },
+    "account": {
+      "pattern": "^\\d{12}$",
+      "title": "Account",
+      "type": "string"
+    },
+    "profile": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Profile",
+      "type": "string"
+    },
+    "username": {
+      "pattern": "^responseforge-[A-Za-z0-9+=,.@_-]{1,49}$",
+      "title": "Username",
+      "type": "string"
+    },
+    "user_id": {
+      "pattern": "^AIDA[A-Z0-9]{12,124}$",
+      "title": "User Id",
+      "type": "string"
+    },
+    "access_key_id": {
+      "pattern": "^AKIA[A-Z0-9]{16}$",
+      "title": "Access Key Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "alias",
+    "tenant",
+    "provider",
+    "account",
+    "profile",
+    "username",
+    "user_id",
+    "access_key_id"
+  ],
+  "title": "AwsTarget",
+  "type": "object"
+}

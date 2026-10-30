@@ -33,6 +33,6 @@ Core domain decisions are separated from HTTP, CLI and external integration adap
 
 ## Unresolved integration scope
 
-No external EDR, cloud, IAM or ticketing response is implemented. Event evidence hashes are analyst assertions. Public demo identities provide no real human separation. Local chain integrity does not prevent an administrator rewriting or truncating all state; no production HA or throughput claim.
+The original synthetic architecture below is extended by the separate cloud dispatch path in [live connectors](live-connectors.md), `app/cloud.py` and `app/connectors.py`. Real IAM write adapters are implemented and contract tested; live acceptance remains unverified. EDR and ticketing response remain unimplemented. Event evidence hashes are analyst assertions. Public demo identities provide no real human separation. Local chain integrity does not prevent an administrator rewriting or truncating all state; no production HA or throughput claim.
 
 See the README for exact setup, sample outputs, decision semantics and limits. The threat model distinguishes hypotheses from source-established controls.

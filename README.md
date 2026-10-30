@@ -61,7 +61,7 @@ CI runs lint, strict TypeScript checks, unit/adversarial tests, measured coverag
 
 ## Limits and trust
 
-Only the transactional local connector is implemented. External EDR, IAM, cloud and ticketing integrations are **unverified and unimplemented**. External effects cannot inherit SQLite atomicity; a production connector would require explicit target authorization, idempotency support, durable dispatch, ambiguous-outcome handling, provider readback and compensation design.
+The transactional local connector remains the default demo. Separate real AWS, Azure and GCP identity response connectors now implement configured target pinning, independent approvals, durable dispatch, ambiguous-outcome reconciliation and native readback. They are **implemented and contract tested, but live account acceptance remains unverified**. See [authorized cloud response](docs/live-connectors.md) for setup, exact operations and limits. EDR isolation and ticketing connectors remain unimplemented. External effects do not inherit SQLite atomicity.
 
 Demo identities are public synthetic credentials. The configured identity map must bind separate subjects to separate people to establish actual separation of duties. There is no SSO, credential rotation service, distributed queue, scheduler, rate limiting or production high-availability claim. Failure transactions roll back; success evidence is committed with the action. The local audit chain does not withstand an administrator rewriting or truncating all records. Export and independently retain checkpoints when needed.
 

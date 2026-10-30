@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "alias": {
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Alias",
+      "type": "string"
+    },
+    "tenant": {
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Tenant",
+      "type": "string"
+    },
+    "provider": {
+      "const": "gcp",
+      "title": "Provider",
+      "type": "string"
+    },
+    "project": {
+      "pattern": "^[a-z][a-z0-9-]{4,28}[a-z0-9]$",
+      "title": "Project",
+      "type": "string"
+    },
+    "email": {
+      "pattern": "^responseforge-[a-z0-9-]+@[a-z][a-z0-9-]+\\.iam\\.gserviceaccount\\.com$",
+      "title": "Email",
+      "type": "string"
+    },
+    "unique_id": {
+      "pattern": "^\\d{10,30}$",
+      "title": "Unique Id",
+      "type": "string"
+    },
+    "operator_account": {
+      "pattern": "^[^\\s/]+@[^\\s/]+$",
+      "title": "Operator Account",
+      "type": "string"
+    }
+  },
+  "required": [
+    "alias",
+    "tenant",
+    "provider",
+    "project",
+    "email",
+    "unique_id",
+    "operator_account"
+  ],
+  "title": "GcpTarget",
+  "type": "object"
+}

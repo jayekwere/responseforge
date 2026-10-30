@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Literal
 
@@ -9,6 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import Field, ValidationError
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
+from app.cloud import CloudOrchestrator, CloudRequest
 from app.common import (
     DEMO_IDENTITIES,
     Contract,
@@ -19,11 +21,18 @@ from app.common import (
     clock,
     require,
 )
+from app.connectors import Connector, Registry, Target, connect
 from app.playbooks import Event, Execution, Orchestrator, PlanRequest
 
 
 class Operation(Contract):
     operation: Literal["ingest", "plan", "approve", "execute", "list", "evidence"]
+    record_id: str = Field(default="", pattern=r"^[a-z0-9-]{0,128}$")
+    data: dict[str, Any] = Field(default_factory=dict)
+
+
+class CloudOperation(Contract):
+    operation: Literal["plan", "approve", "execute", "reconcile", "list"]
     record_id: str = Field(default="", pattern=r"^[a-z0-9-]{0,128}$")
     data: dict[str, Any] = Field(default_factory=dict)
 
@@ -63,10 +72,17 @@ class BodyLimit:
 
 
 def create_app(
-    path: Path, identities: dict[str, Identity] | None = None, *, demo: bool = False
+    path: Path,
+    identities: dict[str, Identity] | None = None,
+    *,
+    demo: bool = False,
+    cloud_registry: Registry | None = None,
+    cloud_factory: Callable[[Target], Connector] = connect,
 ) -> FastAPI:
     if identities is None and not demo:
         raise ValueError("An explicit identity map or demo mode is required")
+    if demo and cloud_registry is not None:
+        raise ValueError("Demo identities cannot enable cloud writes")
     accounts = DEMO_IDENTITIES if demo else identities
     assert accounts is not None
     app = FastAPI(title="ResponseForge", version="0.1.0", docs_url=None, redoc_url=None)
@@ -77,6 +93,11 @@ def create_app(
     store = Store(path)
     service = Orchestrator(store)
     app.state.store = store
+    cloud = (
+        CloudOrchestrator(store, cloud_registry, cloud_factory, lambda: clock())
+        if cloud_registry
+        else None
+    )
 
     def identity(authorization: str = Header(default="")) -> Identity:
         return authenticate(authorization, accounts)
@@ -140,6 +161,34 @@ def create_app(
                 actor, operation.record_id, Execution.model_validate(operation.data), now
             )
         raise DomainError("Unsupported operation", 422)
+
+    @app.post("/api/cloud/operate")
+    def cloud_operate(operation: CloudOperation, actor: Identity = Depends(identity)) -> Any:
+        if cloud is None:
+            raise DomainError("Live cloud integrations are not configured", 403)
+        now = clock()
+        if operation.operation == "list":
+            require(actor, "viewer")
+            if operation.record_id or operation.data:
+                raise DomainError("List accepts no payload", 422)
+            return {"records": store.listing(actor, "cloud-plan")}
+        if operation.operation == "plan":
+            if operation.record_id:
+                raise DomainError("Plan accepts no record id", 422)
+            return cloud.plan(actor, CloudRequest.model_validate(operation.data), now)
+        if not operation.record_id:
+            raise DomainError("Record id required", 422)
+        if operation.operation == "approve":
+            return cloud.approve(
+                actor, operation.record_id, Approval.model_validate(operation.data).digest, now
+            )
+        if operation.operation == "execute":
+            return cloud.execute(
+                actor, operation.record_id, Execution.model_validate(operation.data), now
+            )
+        if operation.data:
+            raise DomainError("Reconciliation accepts no payload", 422)
+        return cloud.reconcile(actor, operation.record_id, now)
 
     @app.get("/")
     def index() -> FileResponse:

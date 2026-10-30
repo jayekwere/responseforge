@@ -11,6 +11,7 @@ import uvicorn
 
 from app.api import create_app
 from app.common import DEMO_IDENTITIES, Identity, Store
+from app.connectors import Registry
 from app.playbooks import Event, Execution, Orchestrator, PlanRequest
 
 
@@ -52,8 +53,15 @@ def main() -> None:
         if not raw or any(len(token) < 32 for token in raw):
             raise ValueError("Credentials must contain at least 32 characters")
         identities = {token: Identity.model_validate(value) for token, value in raw.items()}
+    cloud_path = os.environ.get("CLOUD_TARGET_FILE")
+    if args.demo and cloud_path:
+        raise ValueError("Demo mode cannot load a live cloud registry")
+    registry = Registry.load(Path(cloud_path)) if cloud_path else None
     app = create_app(
-        Path(os.environ.get("STATE_PATH", "artifacts/state.db")), identities, demo=args.demo
+        Path(os.environ.get("STATE_PATH", "artifacts/state.db")),
+        identities,
+        demo=args.demo,
+        cloud_registry=registry,
     )
     uvicorn.run(app, host=os.environ.get("HOST", "127.0.0.1"), port=args.port, access_log=False)
 

@@ -1,0 +1,48 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "target": {
+      "pattern": "^[a-z0-9-]{1,64}$",
+      "title": "Target",
+      "type": "string"
+    },
+    "action": {
+      "enum": [
+        "disable",
+        "restore"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "evidence_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Evidence Sha256",
+      "type": "string"
+    },
+    "observed_at": {
+      "title": "Observed At",
+      "type": "string"
+    },
+    "restore_of": {
+      "anyOf": [
+        {
+          "pattern": "^cloud-[a-f0-9]{32}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Restore Of"
+    }
+  },
+  "required": [
+    "target",
+    "action",
+    "evidence_sha256",
+    "observed_at"
+  ],
+  "title": "CloudRequest",
+  "type": "object"
+}

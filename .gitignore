@@ -19,3 +19,11 @@ playwright-report/
 *.tfstate*
 *.tfplan
 .scanner/
+
+.private/
+private-evidence/
+*.snapshot.json
+
+*.pem
+
+*.key
