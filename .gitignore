@@ -27,3 +27,5 @@ private-evidence/
 *.pem
 
 *.key
+
+.env.*

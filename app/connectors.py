@@ -315,7 +315,19 @@ class GcpConnector:
         impersonated = config.get("auth", {}).get("impersonate_service_account") or os.environ.get(
             "CLOUDSDK_AUTH_IMPERSONATE_SERVICE_ACCOUNT"
         )
-        if t.operator_account == t.email or impersonated:
+        overrides = (
+            config.get("auth", {}).get("credential_file_override")
+            or config.get("auth", {}).get("access_token_file")
+            or any(
+                os.environ.get(name)
+                for name in [
+                    "CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE",
+                    "CLOUDSDK_AUTH_ACCESS_TOKEN",
+                    "CLOUDSDK_AUTH_ACCESS_TOKEN_FILE",
+                ]
+            )
+        )
+        if t.operator_account == t.email or impersonated or overrides:
             raise DomainError("GCP self-disable or implicit impersonation rejected", 403)
         if self.http is None:
             result = subprocess.run(

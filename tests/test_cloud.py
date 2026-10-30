@@ -497,3 +497,52 @@ def test_configured_api_cannot_enable_live_actions_with_demo_credentials(tmp_pat
         )
         assert len(op("a", {"operation": "list"}).json()["records"]) == 1
     assert fake.writes == 1
+
+
+def test_approved_restore_can_be_replanned_after_precondition_failure(setup):
+    _, service, fake, _ = setup
+    disabled = approved(setup)
+    service.execute(C, disabled["id"], execution(disabled), NOW)
+    restore = approved(setup, action="restore", restore_of=disabled["id"])
+    fake.version = 2
+    assert (
+        service.execute(C, restore["id"], execution(restore, "failed-restore-key"), NOW)["status"]
+        == "precondition_failed"
+    )
+    new = approved(setup, action="restore", restore_of=disabled["id"])
+    assert (
+        service.execute(C, new["id"], execution(new, "new-restore-key"), NOW)["status"]
+        == "verified"
+    )
+    assert not fake.disabled and fake.writes == 2
+
+
+def test_plan_expiry_after_native_read_never_dispatches(setup):
+    _, service, fake, _ = setup
+    plan = approved(setup)
+    service.clock = lambda: "2026-10-30T12:16:00Z"
+    assert service.execute(C, plan["id"], execution(plan), NOW)["status"] == "precondition_failed"
+    assert fake.writes == 0
+
+
+def test_reserved_crash_recovery_is_atomic_and_never_dispatches(setup):
+    store, service, fake, _ = setup
+    plan = approved(setup)
+
+    def crash():
+        raise KeyboardInterrupt("simulated process termination before dispatch")
+
+    fake.read = crash
+    with pytest.raises(KeyboardInterrupt):
+        service.execute(C, plan["id"], execution(plan), NOW)
+    with pytest.raises(DomainError):
+        service.reconcile(C, plan["id"], NOW)
+    assert service.reconcile(C, plan["id"], LATER)["status"] == "precondition_failed"
+    assert service.execute(C, plan["id"], execution(plan), NOW)["status"] == "precondition_failed"
+    assert fake.writes == 0
+
+
+def test_gcp_credential_overrides_rejected_before_read(monkeypatch):
+    monkeypatch.setenv("CLOUDSDK_AUTH_ACCESS_TOKEN", "private-token")
+    with pytest.raises(DomainError):
+        GcpConnector(GCP, lambda *_: {}, lambda _: {}).read()

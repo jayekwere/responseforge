@@ -18,7 +18,7 @@ Start from `samples/cloud-targets.example.json`, which contains fictional identi
 | --- | --- | --- | --- |
 | AWS | Explicit CLI profile and expected account, stable IAM UserId, pinned access-key ID, `responseforge-` username, tags `responseforge-managed=true` and `responseforge-tenant=<tenant>` | `UpdateAccessKey` with explicit UserName and AccessKeyId, then `GetUser` and `ListAccessKeys` readback | Unverified against a live account |
 | Azure | CLI subscription and directory context, stable service-principal object ID and app ID, Application type, `responseforge-` display name, tags `responseforge-managed` and `responseforge-tenant:<tenant>` | Graph PATCH accountEnabled, then native GET of the pinned object | Unverified against a live account |
-| GCP | Explicit project and operator account, stable service-account uniqueId, matching email, description `responseforge-managed:<tenant>:<alias>`, implicit impersonation rejected | IAM disable/enable using uniqueId, then native GET | Unverified against a live account |
+| GCP | Explicit project and operator account, stable service-account uniqueId, matching email, description `responseforge-managed:<tenant>:<alias>`, implicit impersonation and credential overrides rejected | IAM disable/enable using uniqueId, then native GET | Unverified against a live account |
 
 AWS root callers and the target IAM user itself cannot operate the AWS connector. Azure rejects a matching operator service principal. GCP rejects a matching operator service account. Give the service credential access only to the exact dedicated targets. Ownership markers are additional checks, not a substitute for cloud IAM restrictions. Provider configuration, locally installed credential tools and the service host are trusted.
 
@@ -26,7 +26,7 @@ AWS root callers and the target IAM user itself cannot operate the AWS connector
 
 Submit `operation: plan` with data containing target alias, `action: disable`, an event evidence SHA-256 and a timezone-aware observed_at within the last hour. The evidence hash is an analyst assertion. The service independently reads native target state before recording the plan. The plan expires after 15 minutes and binds the policy, target configuration, evidence and native precondition state. An approver different from the requester approves its digest; an operator different from both dispatches it with an idempotency key. The fixed roles must map to independently controlled credentials in the identity file.
 
-A restore is a separate plan, approval and execution. It requires `action: restore` and `restore_of` referencing this service's verified disable of the same target, whose original state was active. A pre-existing inactive credential cannot be activated by inventing a restore request.
+A restore is a separate plan, approval and execution. It requires `action: restore` and `restore_of` referencing this service's verified disable of the same target, whose original state was active. A pre-existing inactive credential cannot be activated by inventing a restore request. A restore that failed before dispatch can be replanned and approved again; an uncertain restore remains locked until reconciled.
 
 SQLite commits the reservation and target lock before network access, and records `write_started` before a provider write. No database transaction spans a provider request. Application retries return the stored dispatch status and never issue that plan's write again. AWS CLI automatic retries are set to one attempt; HTTP redirects and transport write retries are disabled.
 

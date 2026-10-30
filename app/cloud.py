@@ -96,7 +96,7 @@ class CloudOrchestrator:
                     or previous.get("physical_target") != physical(target)
                     or previous["before"].get("disabled") is not False
                     or previous.get("target_sha256") != plan["target_sha256"]
-                    or previous.get("restore_plan")
+                    or self.restore_consumed(db, actor.tenant, previous)
                 ):
                     raise DomainError("Previous disable is not eligible for this restore", 403)
             self.store.save(db, actor.tenant, plan["id"], "cloud-plan", plan)
@@ -108,6 +108,16 @@ class CloudOrchestrator:
                 now,
             )
         return plan
+
+    def restore_consumed(
+        self, db: sqlite3.Connection, tenant: str, previous: dict[str, Any]
+    ) -> bool:
+        key = previous.get("restore_plan")
+        return (
+            bool(key)
+            and self.store.get(db, tenant, str(key), "cloud-plan")["status"]
+            != "precondition_failed"
+        )
 
     def approve(self, actor: Identity, key: str, hashed: str, now: str) -> dict[str, Any]:
         require(actor, "approver")
@@ -152,7 +162,9 @@ class CloudOrchestrator:
             self.validate(plan, execution.plan_sha256, now, "approved")
             if plan.get("restore_of"):
                 previous = self.store.get(db, actor.tenant, plan["restore_of"], "cloud-plan")
-                if previous.get("status") != "verified" or previous.get("restore_plan"):
+                if previous.get("status") != "verified" or self.restore_consumed(
+                    db, actor.tenant, previous
+                ):
                     raise DomainError("Restore is already reserved or no longer eligible")
                 previous["restore_plan"] = key
                 self.store.save(db, actor.tenant, previous["id"], "cloud-plan", previous)
@@ -190,8 +202,19 @@ class CloudOrchestrator:
             current = self.store.get(db, actor.tenant, key, "cloud-plan")
             if current["status"] != "reserved":
                 raise DomainError("Dispatch state changed")
-            if timestamp(now) >= timestamp(current["expires_at"]):
-                raise DomainError("Cloud plan expired before dispatch")
+            if timestamp(self.clock()) >= timestamp(current["expires_at"]):
+                current.update(
+                    status="precondition_failed",
+                    updated_at=self.clock(),
+                    verification="approval-expired-before-dispatch",
+                )
+                self.store.save(db, actor.tenant, key, "cloud-plan", current)
+                db.execute(
+                    "DELETE FROM cloud_locks WHERE target=? AND tenant=? AND plan=?",
+                    (plan["physical_target"], actor.tenant, key),
+                )
+                self.store.audit(db, actor, "cloud_precondition_failed", {"id": key}, self.clock())
+                return current
             current.update(status="write_started", write_started_at=self.clock())
             self.store.save(db, actor.tenant, key, "cloud-plan", current)
             self.store.audit(db, actor, "cloud_write_started", {"id": key}, now)
