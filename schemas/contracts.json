@@ -1,0 +1,139 @@
+{
+  "Operation": {
+    "additionalProperties": false,
+    "properties": {
+      "operation": {
+        "enum": [
+          "ingest",
+          "plan",
+          "approve",
+          "execute",
+          "list",
+          "evidence"
+        ],
+        "title": "Operation",
+        "type": "string"
+      },
+      "record_id": {
+        "default": "",
+        "pattern": "^[a-z0-9-]{0,128}$",
+        "title": "Record Id",
+        "type": "string"
+      },
+      "data": {
+        "additionalProperties": true,
+        "title": "Data",
+        "type": "object"
+      }
+    },
+    "required": [
+      "operation"
+    ],
+    "title": "Operation",
+    "type": "object"
+  },
+  "Event": {
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "pattern": "^[a-z0-9-]{1,64}$",
+        "title": "Id",
+        "type": "string"
+      },
+      "source": {
+        "enum": [
+          "synthetic-edr",
+          "authorized-import"
+        ],
+        "title": "Source",
+        "type": "string"
+      },
+      "kind": {
+        "enum": [
+          "malware-detected",
+          "credential-anomaly"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "resource": {
+        "pattern": "^sim:[a-z0-9-]{1,128}$",
+        "title": "Resource",
+        "type": "string"
+      },
+      "severity": {
+        "enum": [
+          "high",
+          "critical"
+        ],
+        "title": "Severity",
+        "type": "string"
+      },
+      "observed_at": {
+        "title": "Observed At",
+        "type": "string"
+      },
+      "evidence_sha256": {
+        "pattern": "^[a-f0-9]{64}$",
+        "title": "Evidence Sha256",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "source",
+      "kind",
+      "resource",
+      "severity",
+      "observed_at",
+      "evidence_sha256"
+    ],
+    "title": "Event",
+    "type": "object"
+  },
+  "PlanRequest": {
+    "additionalProperties": false,
+    "properties": {
+      "event_id": {
+        "pattern": "^[a-z0-9-]{1,64}$",
+        "title": "Event Id",
+        "type": "string"
+      },
+      "playbook": {
+        "enum": [
+          "contain-host",
+          "disable-identity"
+        ],
+        "title": "Playbook",
+        "type": "string"
+      }
+    },
+    "required": [
+      "event_id",
+      "playbook"
+    ],
+    "title": "PlanRequest",
+    "type": "object"
+  },
+  "Execution": {
+    "additionalProperties": false,
+    "properties": {
+      "idempotency_key": {
+        "pattern": "^[a-zA-Z0-9-]{8,128}$",
+        "title": "Idempotency Key",
+        "type": "string"
+      },
+      "plan_sha256": {
+        "pattern": "^[a-f0-9]{64}$",
+        "title": "Plan Sha256",
+        "type": "string"
+      }
+    },
+    "required": [
+      "idempotency_key",
+      "plan_sha256"
+    ],
+    "title": "Execution",
+    "type": "object"
+  }
+}

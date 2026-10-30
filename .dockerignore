@@ -1,0 +1,9 @@
+.git
+node_modules
+.venv
+.tools
+artifacts
+*.db*
+.env
+__pycache__
+.terraform

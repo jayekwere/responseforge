@@ -1,0 +1,9 @@
+{
+  "id": "event-001",
+  "source": "synthetic-edr",
+  "kind": "malware-detected",
+  "resource": "sim:workstation-01",
+  "severity": "high",
+  "observed_at": "2026-10-30T10:00:00Z",
+  "evidence_sha256": "9d8cadb9a7420b450f95a52ea0b5b874d04f19eb2c7f1cf35ab7e0205ebcc988"
+}

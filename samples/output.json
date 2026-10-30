@@ -1,0 +1,87 @@
+{
+  "mode": "synthetic-offline",
+  "result": {
+    "status": "succeeded",
+    "plan_id": "plan-event-001",
+    "mode": "local-simulation",
+    "outcome": {
+      "id": "sim:workstation-01",
+      "state": "isolated",
+      "version": 1
+    },
+    "evidence_sha256": "19304be4c32e7bf4a73553ff25cc8563c50e098cc857ee4ddb7b44d6e020ab85"
+  },
+  "evidence": {
+    "tenant": "alder",
+    "events": [
+      {
+        "seq": 1,
+        "payload": {
+          "action": "event_ingested",
+          "actor": "alex",
+          "at": "2026-10-30T12:00:00Z",
+          "record": {
+            "event_sha256": "83d8c3f783ea61670fab3a39c7f2a72015d4ba442f015e02a49fb2cb0c9c8e42",
+            "id": "event-001"
+          },
+          "tenant": "alder"
+        },
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "hash": "905421f0437f810d4ce63ba25498addd70f3973ba7b3e51367b7f0188b318519"
+      },
+      {
+        "seq": 2,
+        "payload": {
+          "action": "planned",
+          "actor": "alex",
+          "at": "2026-10-30T12:00:00Z",
+          "record": {
+            "id": "plan-event-001",
+            "plan_sha256": "2de2a42244e41dc814cad62346ccbeca8a59cb641f0d9f9402fc0205d203782e"
+          },
+          "tenant": "alder"
+        },
+        "previous": "905421f0437f810d4ce63ba25498addd70f3973ba7b3e51367b7f0188b318519",
+        "hash": "1b205f758567cf0a01766f863f7340560dd2c81a505bf5583b4bc1291b8eb2c2"
+      },
+      {
+        "seq": 3,
+        "payload": {
+          "action": "approved",
+          "actor": "blair",
+          "at": "2026-10-30T12:00:00Z",
+          "record": {
+            "id": "plan-event-001",
+            "plan_sha256": "2de2a42244e41dc814cad62346ccbeca8a59cb641f0d9f9402fc0205d203782e"
+          },
+          "tenant": "alder"
+        },
+        "previous": "1b205f758567cf0a01766f863f7340560dd2c81a505bf5583b4bc1291b8eb2c2",
+        "hash": "b049248f8cb721b45a944278f9592680fe5ae5e4b061b500752ad000134b7526"
+      },
+      {
+        "seq": 4,
+        "payload": {
+          "action": "outcome_verified",
+          "actor": "casey",
+          "at": "2026-10-30T12:00:00Z",
+          "record": {
+            "id": "plan-event-001",
+            "mode": "local-simulation",
+            "observed": {
+              "id": "sim:workstation-01",
+              "state": "isolated",
+              "version": 1
+            },
+            "plan_sha256": "2de2a42244e41dc814cad62346ccbeca8a59cb641f0d9f9402fc0205d203782e"
+          },
+          "tenant": "alder"
+        },
+        "previous": "b049248f8cb721b45a944278f9592680fe5ae5e4b061b500752ad000134b7526",
+        "hash": "19304be4c32e7bf4a73553ff25cc8563c50e098cc857ee4ddb7b44d6e020ab85"
+      }
+    ],
+    "checkpoint": "19304be4c32e7bf4a73553ff25cc8563c50e098cc857ee4ddb7b44d6e020ab85",
+    "integrity": "verified_local_chain"
+  }
+}

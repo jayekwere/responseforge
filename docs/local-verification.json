@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-30",
+  "typescript_tests": 1,
+  "python_tests": 18,
+  "browser_tests": 1,
+  "local_browser": "passed",
+  "container_smoke": {
+    "status": "passed",
+    "uid": 10001,
+    "read_only": true,
+    "capabilities": "dropped"
+  },
+  "typescript_coverage_report": "start of coverage report\n\u2139 -------------------------------------------------------------\n\u2139 file         | line % | branch % | funcs % | uncovered lines\n\u2139 -------------------------------------------------------------\n\u2139 web          |        |          |         | \n\u2139  contract.ts | 100.00 |   100.00 |  100.00 | \n\u2139 -------------------------------------------------------------\n\u2139 all files    | 100.00 |   100.00 |  100.00 | \n\u2139 -------------------------------------------------------------\n\u2139",
+  "scope_note": "Node source coverage includes imported production files and excludes test files. Browser coverage is separate. Python percentage combines statements and branches.",
+  "python_statement_coverage_percent": 96.46,
+  "python_branch_coverage_percent": 89.53
+}
