@@ -1,38 +1,34 @@
 # Architecture
 
-Bearer identity --> event --> fixed policy plan --> independent approval --> independent operator --> transactional local sandbox mutation --> readback --> audit and idempotency result
+ResponseForge has a transactional synthetic workflow and a separate live cloud dispatch workflow. Both use identity-derived tenant and roles, fixed operations, independent subjects and durable evidence. The browser and default Docker Compose deployment demonstrate only the synthetic workflow.
 
 ```mermaid
 flowchart LR
-    A[Validated input] --> B[Domain decisions]
-    B --> C[Evidence and explicit outcome]
+  I[Authenticated subject] --> P[Expiring plan and exact target evidence]
+  P --> A[Independent approval]
+  A --> O[Independent operator]
+  O --> S[Atomic SQLite simulation]
+  O --> D[Durable cloud dispatch reservation]
+  D --> N[Native provider action]
+  N --> V[Native readback or uncertain outcome]
+  V --> R[Read-only reconciliation]
 ```
 
-| Component/source | Responsibility |
+| Component | Responsibility |
 | --- | --- |
-| `app/api.py:65` | Authenticated operation API and bounded HTTP middleware |
-| `app/common.py:176` | Trusted bearer identity, tenant and role lookup |
-| `app/playbooks.py:56` | Expiring plans, independent subjects and execution checks |
-| `app/playbooks.py:43` | SQLite-only response connector |
-| `app/common.py:102` | Transactional evidence hash chain |
+| `app/api.py` | Authenticated operations, strict payloads, body/Host/Origin controls and separate cloud endpoint |
+| `app/common.py` | Trusted identities, tenant-scoped SQLite storage and local evidence chain |
+| `app/playbooks.py` | Fixed synthetic playbooks and atomic simulation mutation/readback/idempotency |
+| `app/cloud.py` | Native-state plans, independent approvals, durable reservations, locks and reconciliation |
+| `app/connectors.py` | Configured AWS, Azure and GCP targets, native identity pinning and fixed provider operations |
+| `app/cli.py` | Explicit demo or configured startup; private identity and cloud-registry loading |
 
-## Effective resources
+The local path accepts only `sim:` resources. Its mutation, readback, audit and idempotency response share one SQLite transaction. That atomicity applies to the simulation. The live path accepts only a configured tenant alias, never caller-selected native identifiers, profiles or URLs.
 
-| Deployment or consumer | Configuration and location | Recipients or authority | Enforcing control |
-| --- | --- | --- | --- |
-| Configured credentials | IDENTITY_FILE private token map | Server memory and trusted operator | CLI checks credential length/privacy; direct factory users own equivalent checks |
-| Configured state | STATE_PATH or artifacts/state.db | Tenant-scoped API actors and server | SQLite WAL, composite tenant keys, immediate transactions, database mode 0600; private directory required |
-| Execution target | objects[(identity.tenant, plan.resource, resource)] with sim: resource IDs | Local SQLite sandbox only | Two fixed policies/outcomes; no shell, arbitrary destinations or external cloud writes |
-| Offline demo | Temporary demo.db, fixed clock and public demo identities | Synthetic actors | Temporary local state only; duplicate execution verifies identical committed outcome |
+Live plans bind registry, native before-state, event evidence, policy, requester and expiry. Separate subjects approve and operate. Before a provider write, the service commits a reservation and physical-target lock, verifies native preconditions and expiry, and records write_started. No database transaction spans the provider request. A timeout or failed readback retains an uncertain result and lock; after a cooldown, reconciliation performs reads only. An approved restore is limited to this service's eligible verified disable. These controls do not establish distributed exactly-once execution or revocation of issued sessions.
 
-## Trust and decisions
+AWS updates a pinned IAM access-key status. Azure updates a pinned Application service principal's accountEnabled property. GCP disables or enables a pinned service-account uniqueId. Native ownership markers supplement exact provider IAM restrictions. Provider CLIs, credential stores, the service host and private configuration are trusted. EDR isolation, arbitrary command playbooks and ticketing response are not implemented.
 
-Authenticated identity supplies tenant and role. An analyst can submit supported events and create only synthetic sandbox resources. A plan binds event/resource/policy digests, expected resource version and expiry. Approval rejects requester self-approval. Execution requires an operator distinct from requester and approver and rechecks all approved preconditions. Mutation, provider readback, success audit and idempotency response are in one immediate SQLite transaction. This atomicity applies only to this local connector.
+`--demo` rejects a live cloud registry. Configured host startup requires private `IDENTITY_FILE` and optional `CLOUD_TARGET_FILE`; `STATE_PATH` selects the durable database. Default Compose supplies no live credential tools or account mounts. The database is mode 0600, while parent-directory and companion-file privacy remain host responsibilities.
 
-Core domain decisions are separated from HTTP, CLI and external integration adapters. Runtime models reject unsupported contracts instead of interpreting arbitrary instructions. The UI renders supplied strings with textContent. Container startup uses UID 10001 and loopback publication through Compose. Setup downloads dependencies and optional tools once; core synthetic evaluation does not require a network.
-
-## Unresolved integration scope
-
-The original synthetic architecture below is extended by the separate cloud dispatch path in [live connectors](live-connectors.md), `app/cloud.py` and `app/connectors.py`. Real IAM write adapters are implemented and contract tested; live acceptance remains unverified. EDR and ticketing response remain unimplemented. Event evidence hashes are analyst assertions. Public demo identities provide no real human separation. Local chain integrity does not prevent an administrator rewriting or truncating all state; no production HA or throughput claim.
-
-See the README for exact setup, sample outputs, decision semantics and limits. The threat model distinguishes hypotheses from source-established controls.
+Cloud adapters are implemented and contract tested; live account acceptance remains unverified. Event hashes remain analyst assertions. Public demo subjects do not prove independent human control. The local chain detects retained-sequence changes, not a trusted administrator rewriting all state. See [live connector setup](live-connectors.md) and the [threat model](threatmodel.md) for exact effective resources and limitations.
