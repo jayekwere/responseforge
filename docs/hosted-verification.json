@@ -1,0 +1,109 @@
+{
+  "verified_commit": "acc16bcae1addf0d48367703cca5fb0822076be2",
+  "run_url": "https://github.com/jayekwere/responseforge/actions/runs/41094606137",
+  "run_id": 41094606137,
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 124196997872,
+      "name": "verify",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip install --require-hashes -r requirements-dev.lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm ci --ignore-scripts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm run verify",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run mkdir -p artifacts && python -m app.cli demo > artifacts/output.json && cmp samples/output.json artifacts/output.json",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m ruff check app tests && python -m ruff format --check app tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m mypy app",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pytest",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm audit --audit-level=high",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npx playwright install --with-deps chromium",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm run test:browser",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run docker build -t responseforge:ci .",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node scripts/container-smoke.mjs responseforge:ci",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12994948399,
+      "name": "verification-evidence",
+      "digest": "sha256:9d212ad51267ff99319037ea91597c5834fb75cf09b5a216486b63c2a5104792",
+      "size_in_bytes": 155418,
+      "expires_at": "2026-11-13T16:59:16Z"
+    }
+  ],
+  "scope": "Exact verified snapshot. Later main commits have separately observable workflow runs. Cloud account integration limits remain as documented."
+}

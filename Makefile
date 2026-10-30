@@ -5,7 +5,7 @@ setup:
 	npm run build
 
 check:
-	npm run verify
+	PATH="$(CURDIR)/.venv/bin:$(PATH)" npm run verify
 	.venv/bin/python -m ruff check app tests
 	.venv/bin/python -m mypy app
 	.venv/bin/python -m pytest
