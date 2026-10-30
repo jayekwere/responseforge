@@ -1,0 +1,42 @@
+{
+  "provider": "aws",
+  "mode": "live-dedicated-test-identities",
+  "responseforge_source_commit": "403bbbe32a1ffd62365be81d538224bceeaf6d24",
+  "privilegepath_source_commit": "6a785b96cf9ada31c92afe9f3918dc846fc94ea6",
+  "approval_scope": "Three synthetic subject identities controlled by one verification operator; tests subject independence, not independent human approvals",
+  "operations": [
+    {
+      "action": "disable",
+      "status": "verified",
+      "verification": "provider-acknowledged-and-native-readback",
+      "plan_sha256": "df03fefd21cfe854fb712a05eb419bf465470a827901fe30848d91e4da7646db",
+      "native_disabled": true
+    },
+    {
+      "action": "restore",
+      "status": "verified",
+      "verification": "provider-acknowledged-and-native-readback",
+      "plan_sha256": "23c5fc495df0c666540536cec90e5ca71c041f2e28541c821befc385bd5de3f3",
+      "native_disabled": false
+    }
+  ],
+  "collection": {
+    "status": "partial",
+    "api_calls": 14,
+    "nodes": 11,
+    "edges": 27,
+    "issues": 1,
+    "snapshot_sha256": "a0b6d110cf5aeec80d25db8f68a9cc3f9407bb10858c072847fd566b188f9b0d",
+    "effective_permissions": "not_proven",
+    "issues_explained": [
+      "AWS resource policy variables require context and were not projected"
+    ]
+  },
+  "evidence_chain": "verified_local_chain",
+  "observed_at": "2026-10-30T21:21:31.656166+00:00",
+  "cleanup": {
+    "dedicated_key_deleted": true,
+    "dedicated_user_deleted": true
+  },
+  "scope": "Dedicated temporary AWS IAM identity with no permission grants. Native key disable/readback/restore/readback and inventory collection only. No account-wide response or effective-permission claim."
+}
