@@ -28,6 +28,7 @@ jobs:
       - run: npm ci --ignore-scripts
       
       - run: npm run verify
+      - run: mkdir -p artifacts && python -m app.cli demo > artifacts/output.json && cmp samples/output.json artifacts/output.json
       - run: python -m ruff check app tests && python -m ruff format --check app tests
       - run: python -m mypy app
       - run: python -m pytest
