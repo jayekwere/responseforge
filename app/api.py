@@ -49,23 +49,33 @@ class BodyLimit:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
-        messages = []
+        body = bytearray()
+        terminal = None
         size = 0
         while True:
             message = await receive()
+            if message["type"] == "http.disconnect":
+                terminal = message
+                break
             size += len(message.get("body", b""))
             if size > 1_048_576:
                 await JSONResponse({"error": "Input exceeds 1 MiB"}, status_code=413)(
                     scope, receive, send
                 )
                 return
-            messages.append(message)
+            body.extend(message.get("body", b""))
             if not message.get("more_body", False):
                 break
 
+        replayed = False
+
         async def replay() -> Any:
-            if messages:
-                return messages.pop(0)
+            nonlocal replayed
+            if not replayed:
+                replayed = True
+                if terminal is not None:
+                    return terminal
+                return {"type": "http.request", "body": bytes(body), "more_body": False}
             return await receive()
 
         await self.app(scope, replay, send)

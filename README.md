@@ -34,6 +34,8 @@ Open [http://127.0.0.1:8080](http://127.0.0.1:8080). For a container demo, run `
 - An immediate SQLite transaction covers sandbox mutation, readback verification, plan status, audit evidence and idempotency response. Concurrent retries and restart retries return the same result without another mutation.
 - Reusing a key with a different digest or actor rejects. Failed outcome verification rolls the transaction back and never records success.
 
+HTTP request buffering is bounded by bytes and uses linear replay across fragments. Incomplete transport bodies cannot become completed operations. See [the audit and hardening record](docs/security-audit.json) for exact scope, regressions and limitations.
+
 ## Inputs, integrations and evidence
 
 The local sandbox connector is an actual, persistent SQLite integration that changes tenant-scoped synthetic resource state. It is always labeled `local-simulation`. It does not disable a real identity, isolate a real endpoint, send messages or connect to AWS/Azure/GCP. The offline demo verifies readback of `isolated` and retries the same execution key. Tests additionally exercise `disabled`, concurrent retries, stale approvals, changed policy/target, failed readback and cross-tenant attempts.

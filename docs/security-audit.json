@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "audit_date": "2026-10-31",
+  "audited_revision": "cd6f098ab1dbeb0c05cae204fe30eb64b265d5a0",
+  "scope": "Current tracked repository, independent baseline and architecture review, focused cloud/body investigation and parent validation.",
+  "findings": [
+    {
+      "rule_id": "fragmented-body-replay",
+      "severity": "low",
+      "status": "fixed",
+      "fix": "Accumulate accepted request bytes in one bounded bytearray and replay once. Preserve the inclusive 1 MiB limit, incomplete-body disconnects, subsequent receive events and non-HTTP passthrough."
+    }
+  ],
+  "local_verification": {
+    "python_tests": 51,
+    "typescript_tests": 1,
+    "browser_tests": 1,
+    "python_statement_and_branch_coverage_percent_reported": 90.53,
+    "node_imported_source_line_percent": 100.0,
+    "node_imported_source_branch_percent": 100.0,
+    "lint": "passed",
+    "typecheck": "passed",
+    "offline_cli": "byte-identical",
+    "browser": "passed on isolated port 18182 with temporary state",
+    "container": {
+      "image": "responseforge:audit-20261031",
+      "uid": 10001,
+      "http": "passed",
+      "read_only": true,
+      "capabilities": "dropped"
+    }
+  },
+  "controlled_fragment_regression": {
+    "mode": "controlled ASGI input, not wire exhaustion",
+    "input_bytes": 100000,
+    "nonempty_frames": 100000,
+    "before_peak_traced_bytes": 19199208,
+    "after_peak_traced_bytes": 207809,
+    "regressions": [
+      "Fragmented input preserves exact bytes with frame-independent allocation bound.",
+      "Exactly 1 MiB succeeds; the next byte rejects before downstream processing.",
+      "Split UTF-8 is preserved.",
+      "Disconnect before request completion cannot authorize a mutation.",
+      "Non-HTTP scopes and subsequent receive events retain their semantics."
+    ]
+  },
+  "limits": [
+    "Default listener/Compose exposure is loopback; no Internet deployment assumed.",
+    "Wire exhaustion thresholds and practical fragment pacing were not measured.",
+    "Cloud target, approval, dispatch and reconciliation source had no supported bypass in this audit.",
+    "The existing AWS receipt covers earlier unchanged connector source; Azure/GCP live verification and independent-human approval remain unverified.",
+    "Local evidence chains, trusted host/configuration and provider administrative races retain documented limits."
+  ],
+  "hosted_ci": "The current Verify workflow run identifies the final published commit."
+}
