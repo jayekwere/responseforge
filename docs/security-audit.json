@@ -51,5 +51,6 @@
     "The existing AWS receipt covers earlier unchanged connector source; Azure/GCP live verification and independent-human approval remain unverified.",
     "Local evidence chains, trusted host/configuration and provider administrative races retain documented limits."
   ],
-  "hosted_ci": "The current Verify workflow run identifies the final published commit."
+  "hosted_ci": "The current Verify workflow run identifies the final published commit.",
+  "hosted_ci_dependency_fix": "The first hosted attempt timed out retrieving Ubuntu package metadata from the runner HTTP mirror. Verification uses the official HTTPS archive mirror, bounded APT network timeouts and a five-minute browser-install step limit. Package signature verification remains enabled."
 }

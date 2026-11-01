@@ -33,7 +33,14 @@ jobs:
       - run: python -m mypy app
       - run: python -m pytest
       - run: npm audit --audit-level=high
-      - run: npx playwright install --with-deps chromium
+      - name: Install browser and system dependencies
+        timeout-minutes: 5
+        run: |
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
+          fi
+          printf '%s\n' 'Acquire::http::Timeout "20";' 'Acquire::https::Timeout "20";' 'Acquire::Retries "2";' | sudo tee /etc/apt/apt.conf.d/99-ci-network-timeouts > /dev/null
+          npx playwright install --with-deps chromium
       - run: npm run test:browser
       - run: docker build -t responseforge:ci .
       - run: node scripts/container-smoke.mjs responseforge:ci
