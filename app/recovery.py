@@ -6,6 +6,7 @@ import os
 import secrets
 import sqlite3
 import time
+from contextlib import closing
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
@@ -26,7 +27,7 @@ def file_digest(path: Path) -> str:
 
 
 def inspect_snapshot(path: Path, tenant: str) -> dict[str, Any]:
-    with sqlite3.connect(f"file:{path.resolve()}?mode=ro", uri=True) as db:
+    with closing(sqlite3.connect(f"file:{path.resolve()}?mode=ro", uri=True)) as db:
         db.execute("PRAGMA trusted_schema=OFF")
         if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
             raise DomainError("Snapshot database integrity failed", 422)
@@ -88,8 +89,8 @@ class Recovery:
         os.close(descriptor)
         try:
             with (
-                sqlite3.connect(f"file:{source}?mode=ro", uri=True) as origin,
-                sqlite3.connect(target) as destination,
+                closing(sqlite3.connect(f"file:{source}?mode=ro", uri=True)) as origin,
+                closing(sqlite3.connect(target)) as destination,
             ):
                 origin.backup(destination)
             tables = inspect_snapshot(target, actor.tenant)
@@ -225,8 +226,10 @@ class Recovery:
             os.close(descriptor)
             try:
                 with (
-                    sqlite3.connect(f"file:{source.resolve()}?mode=ro", uri=True) as origin,
-                    sqlite3.connect(target) as restored,
+                    closing(
+                        sqlite3.connect(f"file:{source.resolve()}?mode=ro", uri=True)
+                    ) as origin,
+                    closing(sqlite3.connect(target)) as restored,
                 ):
                     origin.backup(restored)
                 tables = inspect_snapshot(target, actor.tenant)
