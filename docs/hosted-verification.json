@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/jayekwere/responseforge",
-  "verified_commit": "db44e0ab857e424b0a8c4eb8c0041a8fe6241162",
+  "verified_commit": "7c9db79b66f309cdfa79f6c436499e90dd04c92f",
   "workflow": "Verify",
-  "run_id": 41370985896,
-  "url": "https://github.com/jayekwere/responseforge/actions/runs/41370985896",
+  "run_id": 41371745912,
+  "url": "https://github.com/jayekwere/responseforge/actions/runs/41371745912",
   "conclusion": "success",
   "jobs": [
     {
@@ -43,7 +43,7 @@
           "conclusion": "success"
         },
         {
-          "name": "Run python -m ruff check app tests && python -m ruff format --check app tests",
+          "name": "Run python -m ruff check app tests scripts && python -m ruff format --check app tests scripts",
           "conclusion": "success"
         },
         {
@@ -87,6 +87,10 @@
           "conclusion": "success"
         },
         {
+          "name": "Validate public evidence boundary",
+          "conclusion": "success"
+        },
+        {
           "name": "Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
           "conclusion": "success"
         },
@@ -111,11 +115,11 @@
   ],
   "artifacts": [
     {
-      "id": 13108919575,
+      "id": 13109686312,
       "name": "verification-evidence",
-      "digest": "sha256:365d3d65fe9d9dc8cca10d952f9fe89db9f8967f73fdfb7ee49c9983ad9502f1",
-      "size_bytes": 157766,
-      "expires_at": "2026-11-16T01:11:10Z"
+      "digest": "sha256:02ce4cf6e0f04a9a0e48347135e9fc132d2899058d8684abc3594f9debe6e11b",
+      "size_bytes": 155801,
+      "expires_at": "2026-11-16T01:19:17Z"
     }
   ],
   "scope": "Actual hosted tests, exact or semantic demo checks, browser, runtime dependency advisories and restricted container checks at verified_commit. Documentation updates can have later commits."

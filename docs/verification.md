@@ -19,3 +19,5 @@ Live account limitations are documented in the README. Green CI establishes the 
 [Hosted Verify run 41370985896](https://github.com/jayekwere/responseforge/actions/runs/41370985896) passed at `db44e0ab857e424b0a8c4eb8c0041a8fe6241162`. Exact jobs, steps and artifact digests are recorded in [the hosted receipt](hosted-verification.json).
 
 Public CI artifacts use an explicit file allowlist and reject private-key markers. Browser state stays outside that public evidence set.
+
+[Hosted Verify run 41371745912](https://github.com/jayekwere/responseforge/actions/runs/41371745912) passed at `7c9db79b66f309cdfa79f6c436499e90dd04c92f`. Exact jobs, steps and artifact digests are recorded in [the hosted receipt](hosted-verification.json).
