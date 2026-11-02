@@ -37,10 +37,16 @@ def demo() -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["demo", "serve"])
+    parser.add_argument("command", choices=["demo", "serve", "recovery-demo"])
     parser.add_argument("--demo", action="store_true")
     parser.add_argument("--port", type=int, default=8080)
     args = parser.parse_args()
+    if args.command == "recovery-demo":
+        from app.recovery import demo as recovery_demo
+
+        with tempfile.TemporaryDirectory() as directory:
+            print(json.dumps(recovery_demo(Path(directory)), indent=2))
+        return
     if args.command == "demo":
         print(json.dumps(demo(), indent=2))
         return

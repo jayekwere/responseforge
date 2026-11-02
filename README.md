@@ -74,3 +74,12 @@ See [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md). MIT cover
 ---
 
 **AI assistance:** AI tools helped with code or documentation.
+## Verified isolated backup and restore
+
+```sh
+python -m app.cli recovery-demo
+```
+
+This drill writes a synthetic record, takes a real SQLite backup, authenticates its manifest with a separate ephemeral HMAC key, writes a later source version, and requires an independent restore plan approval. A third synthetic subject restores the approved snapshot to a new private database. The drill verifies table contents, row hashes and the restored audit chain, checks durable replay and confirms the source remains untouched.
+
+Output includes measured restore execution time and one fixture update absent from the snapshot. It does not infer time-based RPO or production RTO. The original response demo is unchanged. The CLI creates a private temporary workspace and removes it after evidence is returned. [Recovery design and limits](docs/recovery.md) describe the boundary.

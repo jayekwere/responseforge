@@ -1,0 +1,122 @@
+{
+  "mode": "actual-isolated-sqlite-backup-and-restore",
+  "result": {
+    "status": "succeeded",
+    "destination": "restored001.sqlite",
+    "logical_records": "verified_exact_snapshot",
+    "tables": {
+      "objects": {
+        "count": 1,
+        "sha256": "f7f134ef6f49d7b333b41c313f662efc2316eefdfba9e78c17409781f3356c5a"
+      },
+      "audit": {
+        "count": 1,
+        "sha256": "b77353888839bd979383b806bf7b9b40a850d07c2e362f9307b7e6529f8cdba1"
+      },
+      "idempotency": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    "restored_audit_checkpoint": "63851edf5161cfc50855258f9799db54377aa5cf04a49e56c43bd92ad478489d",
+    "measured_restore_seconds": 0.002199,
+    "scope": "isolated_synthetic_sqlite_restore_no_production_recovery_claim"
+  },
+  "approval_gate_verified": true,
+  "idempotent_replay_verified": true,
+  "source_untouched": true,
+  "fixture_recovery_point": {
+    "snapshot_version": 1,
+    "latest_source_version": 2,
+    "lost_fixture_updates": 1,
+    "time_based_rpo": "not_measured"
+  },
+  "evidence": {
+    "tenant": "alder",
+    "events": [
+      {
+        "seq": 1,
+        "payload": {
+          "action": "recovery.backup",
+          "actor": "casey",
+          "at": "2026-11-02T01:07:57.729322+00:00",
+          "record": {
+            "backup_sha256": "356ecc66d8740d641790f31dc3ddceda142dc3fbee4b97232352e03ff208cd1d",
+            "manifest_sha256": "b7226820033e1788396455ae3362127d0e23f3133f78fc0a17462c256fe3e69b"
+          },
+          "tenant": "alder"
+        },
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "hash": "edf6dc1cfffea0fa1ca93e9b92a360910582d14c0970c4b3c02fd76dc0c1dae1"
+      },
+      {
+        "seq": 2,
+        "payload": {
+          "action": "recovery.plan",
+          "actor": "alex",
+          "at": "2026-11-02T01:07:57.729322+00:00",
+          "record": {
+            "id": "recovery-617500bbe1ab60d7f406df3f",
+            "plan_sha256": "ae985fa605875d5f2c669ba74799fa6f384a5a8b5771515132120069ce6d39a3"
+          },
+          "tenant": "alder"
+        },
+        "previous": "edf6dc1cfffea0fa1ca93e9b92a360910582d14c0970c4b3c02fd76dc0c1dae1",
+        "hash": "78cad9c547558847ea834d661ff698a692e6b52977047fb9804c36f95eeed4d9"
+      },
+      {
+        "seq": 3,
+        "payload": {
+          "action": "recovery.approve",
+          "actor": "blair",
+          "at": "2026-11-02T01:07:57.729322+00:00",
+          "record": {
+            "id": "recovery-617500bbe1ab60d7f406df3f",
+            "plan_sha256": "ae985fa605875d5f2c669ba74799fa6f384a5a8b5771515132120069ce6d39a3"
+          },
+          "tenant": "alder"
+        },
+        "previous": "78cad9c547558847ea834d661ff698a692e6b52977047fb9804c36f95eeed4d9",
+        "hash": "c0262b8f6f61f6213e6b61a50d715406c11c37ba6ae2c38bc0bc49ed1e59e1b3"
+      },
+      {
+        "seq": 4,
+        "payload": {
+          "action": "recovery.restore",
+          "actor": "casey",
+          "at": "2026-11-02T01:07:57.729322+00:00",
+          "record": {
+            "id": "recovery-617500bbe1ab60d7f406df3f",
+            "result": {
+              "destination": "restored001.sqlite",
+              "logical_records": "verified_exact_snapshot",
+              "measured_restore_seconds": 0.002199,
+              "restored_audit_checkpoint": "63851edf5161cfc50855258f9799db54377aa5cf04a49e56c43bd92ad478489d",
+              "scope": "isolated_synthetic_sqlite_restore_no_production_recovery_claim",
+              "status": "succeeded",
+              "tables": {
+                "audit": {
+                  "count": 1,
+                  "sha256": "b77353888839bd979383b806bf7b9b40a850d07c2e362f9307b7e6529f8cdba1"
+                },
+                "idempotency": {
+                  "count": 0,
+                  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                },
+                "objects": {
+                  "count": 1,
+                  "sha256": "f7f134ef6f49d7b333b41c313f662efc2316eefdfba9e78c17409781f3356c5a"
+                }
+              }
+            }
+          },
+          "tenant": "alder"
+        },
+        "previous": "c0262b8f6f61f6213e6b61a50d715406c11c37ba6ae2c38bc0bc49ed1e59e1b3",
+        "hash": "7da957a36fd9a031f22d0bff22a0d19a203f6db2375109e986b8ea449ecb3453"
+      }
+    ],
+    "checkpoint": "7da957a36fd9a031f22d0bff22a0d19a203f6db2375109e986b8ea449ecb3453",
+    "integrity": "verified_local_chain"
+  }
+}

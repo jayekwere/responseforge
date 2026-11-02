@@ -1,0 +1,13 @@
+# Isolated recovery drill
+
+`python -m app.cli recovery-demo` performs native SQLite backup and restore against disposable synthetic data. It does not call a cloud provider, replace active application state or roll back response actions.
+
+The source fixture uses the real Store schema. A consistent native SQLite snapshot captures the record and its audit chain. The private manifest binds the exact file digest, per-table row count and logical digest, tenant and capture timestamp. A domain-separated HMAC authenticates the manifest with a key held outside the backup. The demo key exists only in process memory; operational key persistence and rotation are outside this drill.
+
+The requester plans a restore to a new isolated destination with a fifteen-minute expiration. A distinct approver authorizes the exact plan digest. A third subject executes it. Approval and execution are durably recorded in a separate coordinator database. The executor verifies the authenticated manifest, unchanged backup bytes, exact schema, tenant isolation and row hashes, then uses native SQLite backup into an exclusively created destination. It independently reads the restored records and verifies the local audit chain. Successful repetition returns the stored receipt; a destination is never overwritten.
+
+A crash after creating a destination but before committing the coordinator receipt can leave an orphaned isolated database. The next execution refuses to overwrite it. Inspect and reconcile it manually rather than assuming exactly-once behavior across SQLite and the filesystem. HMAC authenticity does not encrypt the backup. Private directory permissions protect disposable local files only.
+
+The drill changes the source fixture from version 1 to version 2 after capture, then proves the restored version is 1 while the source remains 2. The measured duration covers the local restore function, not discovery, human approval, service restart or production recovery. One missing fixture update is an observed recovery point; no elapsed-time RPO is claimed. SQLite data restoration does not demonstrate restoration of cloud IAM, external events, secrets, queues or an entire incident response environment. Never restore old response state into an active environment without separately addressing consumed approvals and external side effects.
+
+Tests reject changed manifests, modified backup bytes, cross-tenant snapshots, stale approvals, wrong digests, self-approval, non-independent executors, existing destinations and unexpected schema. The previous offline response scenario continues to run and its golden output remains byte-identical.
