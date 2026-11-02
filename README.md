@@ -74,6 +74,7 @@ See [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md). MIT cover
 ---
 
 **AI assistance:** AI tools helped with code or documentation.
+
 ## Verified isolated backup and restore
 
 ```sh

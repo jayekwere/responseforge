@@ -15,3 +15,5 @@ Live account limitations are documented in the README. Green CI establishes the 
 [Hosted Verify run 41095423299](https://github.com/jayekwere/responseforge/actions/runs/41095423299) passed for commit `ac2aab7c860bdeaa568bdb6cba82a16cf7abc1d0`. It includes unit tests, lint/type checks, exact CLI sample-output comparison, browser execution, dependency audit and the container smoke test. Machine-readable job steps and artifact digests are in [hosted-verification.json](hosted-verification.json).
 
 [AWS live acceptance](aws-live-verification.json) now records native response readbacks and IAM collection. It is separate from synthetic contract tests and green hosted CI. Azure/GCP live acceptance remains unverified. Native inventory stayed private, and dedicated temporary AWS test resources were removed.
+
+[Hosted Verify run 41370985896](https://github.com/jayekwere/responseforge/actions/runs/41370985896) passed at `db44e0ab857e424b0a8c4eb8c0041a8fe6241162`. Exact jobs, steps and artifact digests are recorded in [the hosted receipt](hosted-verification.json).

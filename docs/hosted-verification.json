@@ -1,11 +1,12 @@
 {
-  "verified_commit": "ac2aab7c860bdeaa568bdb6cba82a16cf7abc1d0",
-  "run_url": "https://github.com/jayekwere/responseforge/actions/runs/41095423299",
-  "run_id": 41095423299,
+  "repository": "https://github.com/jayekwere/responseforge",
+  "verified_commit": "db44e0ab857e424b0a8c4eb8c0041a8fe6241162",
+  "workflow": "Verify",
+  "run_id": 41370985896,
+  "url": "https://github.com/jayekwere/responseforge/actions/runs/41370985896",
   "conclusion": "success",
   "jobs": [
     {
-      "id": 124199799144,
       "name": "verify",
       "conclusion": "success",
       "steps": [
@@ -54,11 +55,23 @@
           "conclusion": "success"
         },
         {
+          "name": "Run python -m app.cli recovery-demo > artifacts/recovery-output.json",
+          "conclusion": "success"
+        },
+        {
           "name": "Run npm audit --audit-level=high",
           "conclusion": "success"
         },
         {
-          "name": "Run npx playwright install --with-deps chromium",
+          "name": "Run python -m pip install --require-hashes -r requirements-audit.lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip_audit --disable-pip -r requirements.lock --format json > artifacts/python-dependency-audit.json",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install browser and system dependencies",
           "conclusion": "success"
         },
         {
@@ -98,12 +111,12 @@
   ],
   "artifacts": [
     {
-      "id": 12996830640,
+      "id": 13108919575,
       "name": "verification-evidence",
-      "digest": "sha256:774cc22198d8290ddb7d6aceae22e06c05929f5fef0f1fd5831c0829154ee9d8",
-      "size_in_bytes": 155025,
-      "expires_at": "2026-11-13T17:04:24Z"
+      "digest": "sha256:365d3d65fe9d9dc8cca10d952f9fe89db9f8967f73fdfb7ee49c9983ad9502f1",
+      "size_bytes": 157766,
+      "expires_at": "2026-11-16T01:11:10Z"
     }
   ],
-  "scope": "Exact verified commit. A later documentation-only record commit can have a separate green run. Cloud account integration limits remain as documented."
+  "scope": "Actual hosted tests, exact or semantic demo checks, browser, runtime dependency advisories and restricted container checks at verified_commit. Documentation updates can have later commits."
 }
