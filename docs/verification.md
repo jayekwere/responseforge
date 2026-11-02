@@ -17,3 +17,5 @@ Live account limitations are documented in the README. Green CI establishes the 
 [AWS live acceptance](aws-live-verification.json) now records native response readbacks and IAM collection. It is separate from synthetic contract tests and green hosted CI. Azure/GCP live acceptance remains unverified. Native inventory stayed private, and dedicated temporary AWS test resources were removed.
 
 [Hosted Verify run 41370985896](https://github.com/jayekwere/responseforge/actions/runs/41370985896) passed at `db44e0ab857e424b0a8c4eb8c0041a8fe6241162`. Exact jobs, steps and artifact digests are recorded in [the hosted receipt](hosted-verification.json).
+
+Public CI artifacts use an explicit file allowlist and reject private-key markers. Browser state stays outside that public evidence set.
